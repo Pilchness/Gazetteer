@@ -13,7 +13,7 @@ $.ajax({
     countriesList = generateCountryList();
   },
 
-  error: function (jqXHR, textStatus, errorThrown) {
+  error: function (errorThrown) {
     console.log(errorThrown);
   }
 });
@@ -68,6 +68,11 @@ const countryCharacterSearch = (character, position) => {
   }
 };
 
+// $('#countrySearch').autocomplete({
+//   source: ['france', 'germany', 'italy', 'norway', 'finland'],
+//   position: { my: 'right top 5', of: 'right bottom' }
+// });
+
 const checkValidCountry = () => {
   //search for countries that match the current input string
   let currentInputLength = $('#countrySearch').val().length - 1;
@@ -88,10 +93,13 @@ const handleDeletedLetter = () => {
   }
 };
 
+//Jquery Functions
+
 $(document).ready(function () {
   //call jquery functions after page loaded
 
   $('html').keyup(function (event) {
+    //handle key presses
     if (Object.keys(countriesList).length === 1 && event.keyCode != 8) {
       $('#countrySearch').attr('maxlength', countriesList[Object.keys(countriesList)[0]].length.toString());
       $('#countrySearch').val(countriesList[Object.keys(countriesList)[0]]);
