@@ -70,7 +70,7 @@ $(document).ready(function () {
     event.stopPropagation();
   });
 
-  $('#countrySearch').val(''); //resets input box to empty
+  $('#countrySearch').val('').focus(); //resets input box to empty
 
   $('#mapstyle').click(function () {
     //when change map style button is clicked, change map source
@@ -121,23 +121,42 @@ const swapLongLat = (coordArray) => {
   });
 };
 
+const capitalizeCountryName = (name) => {
+  let separateWord = name.toLowerCase().split(' ');
+  for (let i = 0; i < separateWord.length; i++) {
+    separateWord[i] = separateWord[i].charAt(0).toUpperCase() + separateWord[i].substring(1);
+  }
+  return separateWord.join(' ');
+};
+
 const drawCountryOutline = (countryNum) => {
   const countrycords = mapcords.features[countryNum].geometry.coordinates;
 
   if (mapcords.features[countryNum].geometry.type === 'Polygon') {
     //check if the geocords are a single polygon or group of polygons
     //then use appropriate code to add to map
-    let country = L.polygon(swapLongLat(countrycords[0]));
+    let country = L.polygon(swapLongLat(countrycords[0]), { color: 'yellow', id: countryNum });
     countryOutlines.addLayer(country);
+    country.on('click', function () {
+      console.log(countriesList[country.options.id]);
+      $('#selected-country').text(capitalizeCountryName(countriesList[country.options.id]));
+      $('#infoModal').modal('show');
+    });
   } else {
     try {
       for (let i = 0; i < countrycords.length; i++) {
-        let country = L.polygon(swapLongLat(countrycords[i][0]));
+        let country = L.polygon(swapLongLat(countrycords[i][0]), { color: 'yellow', id: countryNum });
         countryOutlines.addLayer(country);
+        country.on('click', function () {
+          console.log(countriesList[country.options.id]);
+          $('#selected-country').text(capitalizeCountryName(countriesList[country.options.id]));
+          $('#infoModal').modal('show');
+        });
       }
     } catch {
       (error) => console.log(error);
     }
   }
+
   countryOutlines.addTo(mapsource.map);
 };
