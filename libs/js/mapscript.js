@@ -2,6 +2,7 @@ import * as mapsource from './mapsources.js';
 
 let mapcords;
 let countriesList;
+let outlineColour = 'blue'; //default colour
 
 //get geodata for country outlines and create country list object
 $.ajax({
@@ -18,6 +19,61 @@ $.ajax({
     console.log(errorThrown);
   }
 });
+
+const addPhotoSourceInformation = (data) => {
+  $('#country-image-more').click(function () {
+    let photographer = data.user.name;
+    let portfolio = data.user.portfolio_url;
+    let location = data.user.location;
+    let twitter = data.user.twitter_username;
+    let bio = data.user.bio;
+    let created = new Date(data.created_at).toString().slice(1, 15);
+    let likes = data.likes;
+
+    alert(
+      `Photographer: ${photographer}\nLocation: ${location}\nBio: ${bio}\nThis photo has been liked ${likes} times.`
+    );
+    console.log(photographer, portfolio, location, twitter, bio, created, likes);
+  });
+};
+
+const getCountryImage = (country) => {
+  console.log('getting photo');
+
+  $.ajax({
+    url: 'libs/php/getCountryImage.php',
+    type: 'POST',
+    dataType: 'json',
+    data: {
+      countryName: country
+    },
+
+    success: function (result) {
+      if (result.status.name === 'ok') {
+        //let randomImage = Math.floor(Math.Rand * 10);
+        if (result.data[0]) {
+          let src = result.data[0].urls.raw + '&w=235&dpr=2';
+          let alt = result.data[0].alt_description;
+          console.log(result.data[0].alt_description);
+
+          $('#country-image').attr('src', src);
+          $('#country-image').attr('alt', alt);
+          $('#country-image-title').text(alt);
+
+          addPhotoSourceInformation(result.data[0]);
+        } else {
+          $('#country-image').attr('src', 'images/fmapthumb.png');
+        }
+      }
+    },
+
+    error: function (jqXHR, textStatus, errorThrown) {
+      console.log(errorThrown);
+    }
+  });
+};
+
+//getCountryImage('iceland');
 
 mapsource.stadia(); //default map style
 let countryOutlines = L.featureGroup();
@@ -42,6 +98,12 @@ const generateCountryList = () => {
   return countries;
 };
 
+const countryFocus = (country) => {
+  $('#countrySearch').val(country);
+  getCountryImage(country.split(' ').join('_'));
+  outlineColour = 'green';
+};
+
 const getListOfPossibleCountries = () => {
   let input = $('#countrySearch').val();
   const regex = new RegExp(`^${input}`);
@@ -51,6 +113,12 @@ const getListOfPossibleCountries = () => {
       countries.push(countriesList[country]);
     }
   }
+  if (countries.length === 1) {
+    $('countrySearch').val(countries[0]);
+    countryFocus(countries[0]);
+  } else {
+    outlineColour = 'blue';
+  }
   return countries;
 };
 
@@ -58,6 +126,12 @@ const getListOfPossibleCountries = () => {
 
 $(document).ready(function () {
   //call jquery functions after page loaded
+  // $(document).keypress(function (event) {
+  //   var keycode = event.keyCode ? event.keyCode : event.which;
+  //   if (keycode == '13') {
+  //     $('#countrySearch').val(getListOfPossibleCountries[0]);
+  //   }
+  // });
 
   $('html').keyup(() => countrySearch(getListOfPossibleCountries()));
 
@@ -135,7 +209,7 @@ const drawCountryOutline = (countryNum) => {
   if (mapcords.features[countryNum].geometry.type === 'Polygon') {
     //check if the geocords are a single polygon or group of polygons
     //then use appropriate code to add to map
-    let country = L.polygon(swapLongLat(countrycords[0]), { color: 'yellow', id: countryNum });
+    let country = L.polygon(swapLongLat(countrycords[0]), { color: outlineColour, id: countryNum });
     countryOutlines.addLayer(country);
     country.on('click', function () {
       console.log(countriesList[country.options.id]);
@@ -145,7 +219,7 @@ const drawCountryOutline = (countryNum) => {
   } else {
     try {
       for (let i = 0; i < countrycords.length; i++) {
-        let country = L.polygon(swapLongLat(countrycords[i][0]), { color: 'yellow', id: countryNum });
+        let country = L.polygon(swapLongLat(countrycords[i][0]), { color: outlineColour, id: countryNum });
         countryOutlines.addLayer(country);
         country.on('click', function () {
           console.log(countriesList[country.options.id]);
