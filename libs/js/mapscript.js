@@ -3,6 +3,7 @@ import * as mapsource from './mapsources.js';
 let mapcords;
 let countriesList;
 
+//get geodata for country outlines and create country list object
 $.ajax({
   type: 'POST',
   url: 'libs/php/geodataDecode.php',
@@ -41,56 +42,16 @@ const generateCountryList = () => {
   return countries;
 };
 
-let previousCountriesList = [{ ...countriesList }];
-
-const displayCountries = (countryObject) => {
-  console.log(countryObject);
-  countryOutlines.clearLayers();
-  for (let country in countryObject) {
-    drawCountryOutline(country);
-  }
-};
-
-const countryCharacterSearch = (character, position) => {
-  //set countriesList to possible countries based on input so far
-  let matchingObject = {};
+const getListOfPossibleCountries = () => {
+  let input = $('#countrySearch').val();
+  const regex = new RegExp(`^${input}`);
+  let countries = [];
   for (let country in countriesList) {
-    if (countriesList[country][position] === character) {
-      matchingObject[country] = countriesList[country];
+    if (regex.test(countriesList[country])) {
+      countries.push(countriesList[country]);
     }
   }
-  previousCountriesList.push({ ...countriesList });
-  countriesList = { ...matchingObject };
-  displayCountries(countriesList);
-  console.log(previousCountriesList);
-  if (Object.keys(countriesList).length === 1) {
-    $('#countrySearch').val(countriesList[Object.keys(countriesList)[0]]);
-  }
-};
-
-// $('#countrySearch').autocomplete({
-//   source: ['france', 'germany', 'italy', 'norway', 'finland'],
-//   position: { my: 'right top 5', of: 'right bottom' }
-// });
-
-const checkValidCountry = () => {
-  //search for countries that match the current input string
-  let currentInputLength = $('#countrySearch').val().length - 1;
-  let userInput = $('#countrySearch').val();
-  countryCharacterSearch(userInput[currentInputLength], currentInputLength);
-};
-
-const handleDeletedLetter = () => {
-  if (Object.keys(countriesList).length > 1) {
-    $('#countrySearch').attr('maxlength', '15');
-
-    previousCountriesList.pop();
-    checkValidCountry();
-    countriesList = { ...previousCountriesList[previousCountriesList.length] };
-    displayCountries(previousCountriesList[previousCountriesList.length]);
-  } else {
-    countriesList = generateCountryList();
-  }
+  return countries;
 };
 
 //Jquery Functions
@@ -98,18 +59,7 @@ const handleDeletedLetter = () => {
 $(document).ready(function () {
   //call jquery functions after page loaded
 
-  $('html').keyup(function (event) {
-    //handle key presses
-    if (Object.keys(countriesList).length === 1 && event.keyCode != 8) {
-      $('#countrySearch').attr('maxlength', countriesList[Object.keys(countriesList)[0]].length.toString());
-      $('#countrySearch').val(countriesList[Object.keys(countriesList)[0]]);
-      console.log('max length is now ' + countriesList[Object.keys(countriesList)[0]].length);
-    } else if (event.keyCode == 8) {
-      handleDeletedLetter();
-    } else {
-      checkValidCountry();
-    }
-  });
+  $('html').keyup(() => countrySearch(getListOfPossibleCountries()));
 
   $('#countrySearch').keypress(function (event) {
     //enter key has same effect as pressing country identify button
@@ -131,15 +81,9 @@ $(document).ready(function () {
     }
   });
 
-  $('#countryIdentify').click(function () {
-    //when country search button is pressed, get country data
-    countrySearch($('#countrySearch').val().toLowerCase());
-  });
-
   $('#clear').click(function () {
     //clears all outlines and resets search box
     countryOutlines.clearLayers();
-    countriesList = generateCountryList();
     $('#countrySearch').val('');
     mapsource.map.setView([51.505, -0.09], 5);
   });
@@ -147,20 +91,26 @@ $(document).ready(function () {
   getCurrentNavCords();
 });
 
-const countrySearch = (country) => {
-  //search for country in list
-  let countryFound = false;
-  let countryNumber = null;
-  for (let item in countriesList) {
-    if (countriesList[item] === country) {
-      countryFound = true;
-      countryNumber = item;
+const countrySearch = (countries) => {
+  countryOutlines.clearLayers();
+
+  if (countries.length !== Object.keys(countriesList).length) {
+    for (let i = 0; i < countries.length; i++) {
+      let countryFound = false;
+      let countryNumber = null;
+      for (let item in countriesList) {
+        if (countriesList[item] === countries[i]) {
+          countryFound = true;
+          countryNumber = item;
+        }
+      }
+      if (countryFound) {
+        drawCountryOutline(countryNumber);
+      } else {
+        console.log(`${countries[i]} was not found.`);
+      }
     }
-  }
-  if (countryFound) {
-    drawCountryOutline(countryNumber);
-  } else {
-    console.log(`${country} was not found.`);
+    mapsource.map.fitBounds(countryOutlines.getBounds());
   }
 };
 
@@ -179,20 +129,12 @@ const drawCountryOutline = (countryNum) => {
     //then use appropriate code to add to map
     let country = L.polygon(swapLongLat(countrycords[0]));
     countryOutlines.addLayer(country);
-    mapsource.map.fitBounds(countryOutlines.getBounds());
   } else {
     try {
-      let country = L.polygon(swapLongLat(countrycords[0][0]));
-      //countryOutlines.addLayer(country);
-
-      let bounds = country.getBounds();
-      //console.log(countrycords.length);
       for (let i = 0; i < countrycords.length; i++) {
         let country = L.polygon(swapLongLat(countrycords[i][0]));
         countryOutlines.addLayer(country);
-        if (i > 0) bounds.extend(country.getBounds());
       }
-      mapsource.map.fitBounds(bounds);
     } catch {
       (error) => console.log(error);
     }

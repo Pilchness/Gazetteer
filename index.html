@@ -37,20 +37,20 @@
   </head>
   <body>
     <h1>Gazetteer</h1>
+    <main>
+      <select id="mapprovider">
+        <option value="stadia" selected="selected">Stadia</option>
+        <option value="here">Here</option>
+        <option value="jawg">Jawg</option>
+        <option value="forest">Forest</option>
+      </select>
+      <button id="mapstyle">Change Map Style</button>
+      <input id="countrySearch" type="text" value="" spellcheck="false" />
+      <button id="clear">Clear Map</button>
 
-    <select id="mapprovider">
-      <option value="stadia" selected="selected">Stadia</option>
-      <option value="here">Here</option>
-      <option value="jawg">Jawg</option>
-      <option value="forest">Forest</option>
-    </select>
-    <button id="mapstyle">Change Map Style</button>
-    <input id="countrySearch" type="text" value="" spellcheck="false" />
-    <button id="countryIdentify">Show Country Border</button>
-    <button id="clear">Clear Map</button>
-
-    <div id="preloader"></div>
-    <div id="mapid"></div>
+      <div id="preloader"></div>
+      <div id="mapid"></div>
+    </main>
 
     <!-- JQuery Script -->
     <script type="application/javascript" src="libs/js/jqueryv3.5.1.js"></script>
