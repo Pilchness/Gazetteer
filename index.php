@@ -157,7 +157,16 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div class="modal-body">This is the weather modal.</div>
+            <div class="modal-body">
+              <table id="city-weather-table">
+                <tr>
+                  <th>City</th>
+                  <th>Weather</th>
+                  <th>Wind</th>
+                  <th>Temp(°C)</th>
+                </tr>
+              </table>
+            </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
               <button type="button" class="btn btn-primary">Save changes</button>
@@ -274,7 +283,7 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div class="modal-body">This is the quiz modal.</div>
+            <div class="modal-body"> <?php include 'libs/php/quizGenerator.php'; ?></div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
               <button type="button" class="btn btn-primary">Save changes</button>
@@ -292,7 +301,7 @@
     <script type="application/javascript" src="libs/js/loaderscript.js"></script>
     <script type="module" src="libs/js/mapscript.js"></script>
     <script type="module" src="libs/js/iconControl.js"></script>
-    <script type="module" src="libs/js/weather.js"></script>
+    <script type="application/javascript" src="libs/js/quiz.js"></script>
 
     <!-- Leaflet Scripts -->
     <script

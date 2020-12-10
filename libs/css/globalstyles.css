@@ -1,7 +1,9 @@
 #mapid {
-  height: 1000px;
+  width: 100vw;
+  height: 100vh;
 }
 
-svg {
-  margin-left: 30px;
+#quiz-button {
+  width: 20em;
+  height: 2em;
 }

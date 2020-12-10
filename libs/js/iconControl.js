@@ -46,24 +46,3 @@ $(document).ready(function () {
     mapsource.forest();
   });
 });
-
-$('#test').click(function () {
-  $.ajax({
-    url: 'libs/php/getCountryImage.php',
-    type: 'POST',
-    dataType: 'json',
-
-    success: function (result) {
-      if (result.status.name === 'ok') {
-        //let randomImage = Math.floor(Math.Rand * 10);
-        let src = result.data[3].urls.small;
-        console.log(src);
-        $('#country-image').attr('src', src);
-      }
-    },
-
-    error: function (jqXHR, textStatus, errorThrown) {
-      console.log(errorThrown);
-    }
-  });
-});

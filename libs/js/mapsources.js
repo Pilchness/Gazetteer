@@ -1,4 +1,12 @@
-export const map = L.map('mapid', { zoomControl: false }).setView([51.505, -0.09], 5);
+export const map = L.map('mapid', {
+  zoomControl: false,
+  scrollWheelZoom: false,
+  dragging: false,
+  doubleClickZoom: false,
+  boxZoom: false,
+  rendere: L.canvas,
+  touchZoom: false
+}).setView([51.505, -0.09], 5);
 
 export const here = () => {
   return L.tileLayer

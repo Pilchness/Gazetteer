@@ -1,4 +1,6 @@
-const getLocalCityWeather = (country) => {
+import * as mapsource from './mapsources.js';
+
+export const handleWeatherData = (country) => {
   let countryObjects;
 
   $.ajax({
@@ -53,7 +55,8 @@ const getLocalCityWeather = (country) => {
     const generateCityCodeString = () => {
       let cityCodeString = cityArray[0];
       for (let i = 1; i < 10; i++) {
-        cityCodeString = cityCodeString + ',' + cityArray[i];
+        let randomCity = Math.floor(Math.random() * cityArray.length);
+        cityCodeString = cityCodeString + ',' + cityArray[randomCity];
       }
       return cityCodeString;
     };
@@ -69,6 +72,24 @@ const getLocalCityWeather = (country) => {
       success: function (result) {
         if (result.status.name === 'ok') {
           console.log(result.data);
+          const cityData = result.data;
+          let cityWeatherTable = '';
+
+          cityData.map((data) => {
+            cityWeatherTable += `<tr><td>${data.name}</td><td>${data.weather[0].description}</td><td>${
+              data.wind.speed
+            }</td><td>${Math.round(data.main.temp - 273.15)}</td></tr>`; //need to convert temp from K to C
+            L.marker([data.coord.lat, data.coord.lon])
+              .bindTooltip(data.name, {
+                permanent: false,
+                direction: 'auto'
+              })
+              .addTo(mapsource.map);
+          });
+
+          console.log(cityWeatherTable);
+          $('#city-weather-table').find('tr:gt(0)').remove();
+          $(cityWeatherTable).appendTo('#city-weather-table tbody');
         }
       },
 
@@ -78,8 +99,4 @@ const getLocalCityWeather = (country) => {
       }
     });
   };
-
-  //getWeatherData([681648, 681645, 5923101]);
 };
-
-getLocalCityWeather('france');

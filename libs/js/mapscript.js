@@ -1,10 +1,10 @@
 import * as mapsource from './mapsources.js';
+import { handleWeatherData } from '../js/weather.js';
 
 let mapcords;
 let countriesList;
 let outlineColour = 'blue'; //default colour
 
-//get geodata for country outlines and create country list object
 $.ajax({
   type: 'POST',
   url: 'libs/php/geodataDecode.php',
@@ -31,7 +31,7 @@ const addPhotoSourceInformation = (data) => {
     let likes = data.likes;
 
     alert(
-      `Photographer: ${photographer}\nLocation: ${location}\nBio: ${bio}\nThis photo has been liked ${likes} times.`
+      `Photographer: ${photographer}\nHome Country: ${location}\nBio: ${bio}\nThis photo has been liked ${likes} times.\n\nSee more photos by this photographer: ${portfolio} `
     );
     console.log(photographer, portfolio, location, twitter, bio, created, likes);
   });
@@ -99,9 +99,22 @@ const generateCountryList = () => {
 };
 
 const countryFocus = (country) => {
+  //when one country is selected, get data and change outline to green
   $('#countrySearch').val(country);
+  handleWeatherData(country);
+  //console.log(weatherTableData);
   getCountryImage(country.split(' ').join('_'));
   outlineColour = 'green';
+
+  // const weather = new Promise(function (resolve, reject) {
+  //   resolve(getLocalCityWeather(country));
+  // });
+  // weather.then((data) => console.log(data));
+
+  // .then((data) => handleWeatherData(data))
+  // .then(() => getCountryImage(country.split(' ').join('_')));
+  //console.log(cityData);
+  //handleWeatherData(cityData);
 };
 
 const getListOfPossibleCountries = () => {
