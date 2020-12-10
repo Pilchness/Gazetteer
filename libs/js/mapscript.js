@@ -67,7 +67,7 @@ const getCountryImage = (country) => {
       }
     },
 
-    error: function (jqXHR, textStatus, errorThrown) {
+    error: function (errorThrown) {
       console.log(errorThrown);
     }
   });
