@@ -229,46 +229,37 @@
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="infoModalLabel">
-                <span id="selected-country">Current Location</span>
+                <h3 id="selected-country">Current Location</h3>
               </h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
-              <figure>
+              <div style="display: grid; grid-template-columns: 1fr minmax(100px, 15%);">
+              <figure id="info-figure"style="margin-right: 5px">
                 <figcaption id="country-image-title">Sorry, no image available</figcaption>
-                <img id="country-image" src="images/fmapthumb.png" alt="default image" />
-                <div style="display: inline-flex">
-                  <p>
-                    Image provided by
-                    <a href="https://unsplash.com" target="_blank" rel="noopener noreferrer">unsplash.com</a>
-                  </p>
-                  &nbsp;
-                  <button id="country-image-more" style="height: 2em">More Info</button>
-                </div>
+                <img id="country-image" src="images/fmapthumb.png" alt="default image" width="100%" />
               </figure>
-              <table style="width: 100%">
-                <tr>
-                  <th>Firstname</th>
-                  <th>Lastname</th>
-                  <th>Age</th>
-                </tr>
-                <tr>
-                  <td>Jill</td>
-                  <td>Smith</td>
-                  <td>50</td>
-                </tr>
-                <tr>
-                  <td>Eve</td>
-                  <td>Jackson</td>
-                  <td>94</td>
-                </tr>
-              </table>
-            </div>
+              <div id="info-overlay" style="position:absolute; top:0; left: 0"></div>
+              <div id="info-menu-background" style="width: 100px; height: 70%;  background-color: rgba(63, 127, 191, 0.7); margin-top: 19px">
+              <ul style="list-style-type: none;
+                  padding: 5px;
+                  margin: 0;
+                  text-align: left;
+                  font-size: 0.8em;">
+                <li id="menu-facts">Facts</li>
+                 <li id="menu-photographer">Photographer</li>
+                  <li id="menu-next-image">Next Image</li>
+                   <li id="menu-timezones">Timezones</li>
+                    <li id="menu-currencies">Currencies</li>
+                     <li id="menu-borders">Borders</li>
+                      <li id="menu-languages">Languages</li>
+                       <li id="menu-pois">POIs</li>
+              </ul></div>
+            
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
+         
             </div>
           </div>
         </div>
@@ -278,15 +269,13 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="quizModalLabel">Quiz</h5>
+              <h5 class="modal-title" id="quizModalLabel">Capital Cities Quiz</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div class="modal-body"> <?php include 'libs/php/quizGenerator.php'; ?></div>
+            <div class="modal-body" id="quiz-body"> <?php include 'libs/php/quizGenerator.php'; ?></div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
             </div>
           </div>
         </div>
@@ -302,6 +291,7 @@
     <script type="module" src="libs/js/mapscript.js"></script>
     <script type="module" src="libs/js/iconControl.js"></script>
     <script type="application/javascript" src="libs/js/quiz.js"></script>
+
 
     <!-- Leaflet Scripts -->
     <script

@@ -1,9 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Andika+New+Basic&display=swap');
+
 #mapid {
   width: 100vw;
   height: 100vh;
 }
 
-#quiz-button {
+body {
+  font-family: 'Andika New Basic', sans-serif;
+}
+
+.leaflet-pop .leaflet-popup-content-wrapper {
+  background: rgba(63, 127, 191, 0.7);
+  /* background: #2c3e50; */
+  color: black;
+  font-size: 1.2em;
+  line-height: 1.2em;
+  text-align: justify;
+  font-family: 'Andika New Basic', sans-serif;
+}
+
+h3 {
+  text-align: left !important;
+  font-size: 2em !important;
+  font-family: 'Andika New Basic', sans-serif !important;
+}
+
+.leaflet-pop .leaflet-popup-content-wrapper a {
+  color: rgba(255, 255, 255, 0.5);
+}
+.leaflet-pop .leaflet-popup-tip-container {
+  width: 30px;
+  height: 15px;
+}
+.leaflet-pop .leaflet-popup-tip {
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-top: 15px solid #2c3e50;
+}
+
+.marker-tooltip {
+  background: rgba(63, 127, 191, 0.7);
+  border: 2px solid black;
   width: 20em;
-  height: 2em;
+  white-space: normal;
+}
+
+.leaflet-tooltip-left.marker-tooltip::before {
+  border-left-color: black;
+}
+.leaflet-tooltip-right.marker-tooltip::before {
+  border-right-color: black;
+}
+
+figcaption {
+  font-size: 0.8em;
 }

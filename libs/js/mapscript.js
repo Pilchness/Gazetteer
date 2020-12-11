@@ -1,15 +1,17 @@
 import * as mapsource from './mapsources.js';
-import { handleWeatherData } from '../js/weather.js';
-
+import { handleWeatherData } from './weather.js';
+import { getCountryISOCode } from './getCountryISO.js';
 let mapcords;
 let countriesList;
 let outlineColour = 'blue'; //default colour
 
+//console.log(getCountryISOCode('france'));
+
 $.ajax({
   type: 'POST',
   url: 'libs/php/geodataDecode.php',
-  data: { action: 'test' },
   dataType: 'json',
+  data: { action: 'all' },
   success: function (response) {
     mapcords = response.geoData;
     countriesList = generateCountryList();
@@ -21,19 +23,23 @@ $.ajax({
 });
 
 const addPhotoSourceInformation = (data) => {
-  $('#country-image-more').click(function () {
-    let photographer = data.user.name;
-    let portfolio = data.user.portfolio_url;
-    let location = data.user.location;
-    let twitter = data.user.twitter_username;
-    let bio = data.user.bio;
-    let created = new Date(data.created_at).toString().slice(1, 15);
-    let likes = data.likes;
+  let photographer = `<figure id="figure-photographer-overlay" style="display: none; background-color: rgba(63, 127, 191, 0.8);
+      margin-top: 39px; margin-left:20px; width:354px; height: 231px; color: white; position: absolute; top: 0; left: 0;">
+             <ul>
+               <li>Photographer: ${data.user.name}</li>
+               <li>Portfolio: ${data.user.portfolio_url}</li>
+               <li>Home Location: ${data.user.locatio}</li>
+               <li>Twitter Name: ${data.user.twitter_username}</li>
+               <li style="font-size: 0.6em">Bio: ${data.user.bio}</li>
+                <li>Created: ${new Date(data.created_at).toString().slice(4, 15)}</li>
+                 <li>Number of Likes: ${data.likes}</li>
+             </ul>
+           </figure>`;
 
-    alert(
-      `Photographer: ${photographer}\nHome Country: ${location}\nBio: ${bio}\nThis photo has been liked ${likes} times.\n\nSee more photos by this photographer: ${portfolio} `
-    );
-    console.log(photographer, portfolio, location, twitter, bio, created, likes);
+  $('#menu-photographer').on('click', function () {
+    $('#info-figure').html(photographer);
+    $('#country-image-title').css({ color: 'transparent', transition: 'color 2s' });
+    $('#figure-photographer-overlay').fadeIn(3000, function () {});
   });
 };
 
@@ -81,8 +87,26 @@ let countryOutlines = L.featureGroup();
 const getCurrentNavCords = () => {
   if ('geolocation' in navigator) {
     navigator.geolocation.getCurrentPosition(function (position) {
-      L.marker([position.coords.latitude, position.coords.longitude]).addTo(mapsource.map);
-      //`https://api.opencagedata.com/geocode/v1/json?q=${postion.coords.latitude}+${position.coords.longitude}&key=e6653782923143fba432e00a48a0f2fa`;
+      $.ajax({
+        type: 'POST',
+        url: 'libs/php/getPlaceFromLatLong.php',
+        dataType: 'json',
+        data: { latitude: position.coords.latitude, longitude: position.coords.longitude },
+        success: function (response) {
+          L.marker([position.coords.latitude, position.coords.longitude])
+            .bindTooltip(response.data.results[0].formatted, {
+              permanent: false,
+              direction: 'right',
+              className: 'marker-tooltip'
+            })
+            .addTo(mapsource.map);
+        },
+
+        error: function (errorThrown) {
+          console.log(errorThrown);
+        }
+      });
+      mapsource.map.flyTo([position.coords.latitude, position.coords.longitude], 5);
     });
   } else {
     console.log("Browser doesn't support geolocation!");
@@ -104,6 +128,7 @@ const countryFocus = (country) => {
   handleWeatherData(country);
   //console.log(weatherTableData);
   getCountryImage(country.split(' ').join('_'));
+  getCountryISOCode(country);
   outlineColour = 'green';
 
   // const weather = new Promise(function (resolve, reject) {

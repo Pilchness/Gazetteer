@@ -25,7 +25,7 @@ $randomCountries = [
   $geodata->geonames[rand(0, $numberOfCountries / 4)],
   $geodata->geonames[rand($numberOfCountries / 4, $numberOfCountries / 2)],
   $geodata->geonames[rand($numberOfCountries / 2, $numberOfCountries - $numberOfCountries / 4)],
-  $geodata->geonames[rand($numberOfCountries - $numberOfCountries / 4, $numberOfCountries)],
+  $geodata->geonames[rand($numberOfCountries - $numberOfCountries / 4, $numberOfCountries - 1)],
 ];
 
 $capitalCityQuizQuestions = [
@@ -36,21 +36,86 @@ $capitalCityQuizQuestions = [
   $randomCountries[3]->capital ? $randomCountries[3]->capital : 'No Capital',
 ];
 
-$buttonStyle = "\"width: 20em; height: 2em;\"";
+$buttonStyle = "\"width: 20em; height: 3em; margin: 2px\"";
+$infoStyle = "\"width: 8em; height: 3em; margin: 2px\"";
 
-echo '<h3>' . $capitalCityQuizQuestions[0] . '</h3><br />';
+echo '<h4>' . $capitalCityQuizQuestions[0] . '</h4><br />';
 
-$correctAnswer = '<button id="quiz-1" style=' . $buttonStyle . '>' . $capitalCityQuizQuestions[1] . '</button><br />';
-$answerOption1 = '<button id="quiz-2" style=' . $buttonStyle . '>' . $capitalCityQuizQuestions[2] . '</button><br />';
-$answerOption2 = '<button id="quiz-3" style=' . $buttonStyle . '>' . $capitalCityQuizQuestions[3] . '</button><br />';
-$answerOption3 = '<button id="quiz-4" style=' . $buttonStyle . '>' . $capitalCityQuizQuestions[4] . '</button><br />';
+$correctAnswer =
+  '<button id="quiz-1" value=true class="btn btn-secondary" style=' .
+  $buttonStyle .
+  '>' .
+  $capitalCityQuizQuestions[1] .
+  '</button>';
+$answerOption1 =
+  '<button id="quiz-2" value=false class="btn btn-secondary" style=' .
+  $buttonStyle .
+  '>' .
+  $capitalCityQuizQuestions[2] .
+  '</button>';
+$answerOption2 =
+  '<button id="quiz-3" value=false class="btn btn-secondary" style=' .
+  $buttonStyle .
+  '>' .
+  $capitalCityQuizQuestions[3] .
+  '</button>';
+$answerOption3 =
+  '<button id="quiz-4" value=false class="btn btn-secondary" style=' .
+  $buttonStyle .
+  '>' .
+  $capitalCityQuizQuestions[4] .
+  '</button>';
 
 $answerArray = [$correctAnswer, $answerOption1, $answerOption2, $answerOption3];
 
 shuffle($answerArray);
 
-foreach ($answerArray as $answer) {
-  echo $answer;
+if (isset($_REQUEST['currentCorrectScore'])) {
+  $correct = $_REQUEST['currentCorrectScore'];
+} else {
+  $correct = 0;
 }
+
+if (isset($_REQUEST['currentFailScore'])) {
+  $incorrect = $_REQUEST['currentFailScore'];
+} else {
+  $incorrect = 0;
+}
+
+if (isset($_REQUEST['currentPercentage'])) {
+  $percentage = $_REQUEST['currentPercentage'];
+} else {
+  $percentage = 0;
+}
+
+echo '<span>' .
+  $answerArray[0] .
+  '<button id="quiz-success" class="btn btn-success" style=' .
+  $infoStyle .
+  '>Correct: ' .
+  $correct .
+  '</button></span><br />';
+
+echo '<span>' .
+  $answerArray[1] .
+  '<button id="quiz-fail" class="btn btn-danger" style=' .
+  $infoStyle .
+  '>Incorrect: ' .
+  $incorrect .
+  '</button></span><br />';
+
+echo '<span>' .
+  $answerArray[2] .
+  '<button id="quiz-percentage" class="btn btn-info" style=' .
+  $infoStyle .
+  '>Success: ' .
+  $percentage .
+  '%</button></span><br />';
+
+echo '<span>' .
+  $answerArray[3] .
+  '<button id="quiz-restart" class="btn btn-primary" style=' .
+  $infoStyle .
+  '>Restart</button></span><br />';
 
 ?>

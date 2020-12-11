@@ -1,7 +1,7 @@
 export const map = L.map('mapid', {
   zoomControl: false,
   scrollWheelZoom: false,
-  dragging: false,
+  dragging: true,
   doubleClickZoom: false,
   boxZoom: false,
   rendere: L.canvas,

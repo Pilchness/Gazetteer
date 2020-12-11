@@ -75,16 +75,18 @@ export const handleWeatherData = (country) => {
           const cityData = result.data;
           let cityWeatherTable = '';
 
-          cityData.map((data) => {
-            cityWeatherTable += `<tr><td>${data.name}</td><td>${data.weather[0].description}</td><td>${
-              data.wind.speed
-            }</td><td>${Math.round(data.main.temp - 273.15)}</td></tr>`; //need to convert temp from K to C
-            L.marker([data.coord.lat, data.coord.lon])
-              .bindTooltip(data.name, {
-                permanent: false,
-                direction: 'auto'
-              })
-              .addTo(mapsource.map);
+          $('#weather').on('click', function () {
+            cityData.map((data) => {
+              cityWeatherTable += `<tr><td>${data.name}</td><td>${data.weather[0].description}</td><td>${
+                data.wind.speed
+              }</td><td>${Math.round(data.main.temp - 273.15)}</td></tr>`; //need to convert temp from K to C
+              L.marker([data.coord.lat, data.coord.lon])
+                .bindTooltip(data.name, {
+                  permanent: false,
+                  direction: 'auto'
+                })
+                .addTo(mapsource.map);
+            });
           });
 
           console.log(cityWeatherTable);
