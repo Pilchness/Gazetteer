@@ -36,6 +36,23 @@
     <title>Gazetteer</title>
   </head>
   <body>
+       <!-- Quiz Modal -->
+      <div class="modal fade" id="quizModal" tabindex="-1" aria-labelledby="quizModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="quizModalLabel">Capital Cities Quiz</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" id="quiz-body"> <?php include 'libs/php/quizGenerator.php'; ?></div>
+            <div class="modal-footer">
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
     <main>
       <div style="position: fixed; top: 20px; left: 20px; z-index: 9999">
         <nav class="navbar navbar-light bg-transparent">
@@ -264,23 +281,7 @@
           </div>
         </div>
       </div>
-      <!-- Quiz Modal -->
-      <div class="modal fade" id="quizModal" tabindex="-1" aria-labelledby="quizModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="quizModalLabel">Capital Cities Quiz</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body" id="quiz-body"> <?php include 'libs/php/quizGenerator.php'; ?></div>
-            <div class="modal-footer">
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
+   
 
     <!-- JQuery Script -->
     <script type="application/javascript" src="libs/js/jqueryv3.5.1.js"></script>
@@ -291,6 +292,8 @@
     <script type="module" src="libs/js/mapscript.js"></script>
     <script type="module" src="libs/js/iconControl.js"></script>
     <script type="application/javascript" src="libs/js/quiz.js"></script>
+        <script type="application/javascript" src="libs/js/topTens.js"></script>
+
 
 
     <!-- Leaflet Scripts -->

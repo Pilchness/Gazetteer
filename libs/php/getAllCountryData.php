@@ -2,7 +2,7 @@
 
 $executionStartTime = microtime(true) / 1000;
 
-$url = 'http://api.geonames.org/countryInfo?username=pilchness';
+$url = 'https://restcountries.eu/rest/v2/all';
 
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);

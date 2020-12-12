@@ -217,7 +217,7 @@ const countrySearch = (countries) => {
         }
       }
       if (countryFound) {
-        drawCountryOutline(countryNumber);
+        drawCountryOutline(countryNumber, countries[i]);
       } else {
         console.log(`${countries[i]} was not found.`);
       }
@@ -241,16 +241,25 @@ const capitalizeCountryName = (name) => {
   return separateWord.join(' ');
 };
 
-const drawCountryOutline = (countryNum) => {
+const drawCountryOutline = (countryNum, countryName) => {
   const countrycords = mapcords.features[countryNum].geometry.coordinates;
-
+  countryName = countryName.charAt(0).toUpperCase() + countryName.slice(1);
   if (mapcords.features[countryNum].geometry.type === 'Polygon') {
     //check if the geocords are a single polygon or group of polygons
     //then use appropriate code to add to map
     let country = L.polygon(swapLongLat(countrycords[0]), { color: outlineColour, id: countryNum });
     countryOutlines.addLayer(country);
+    country
+
+      .bindTooltip(countryName, {
+        permanent: false,
+        direction: 'right',
+        className: 'country-tooltip'
+      })
+      .addTo(mapsource.map);
     country.on('click', function () {
-      console.log(countriesList[country.options.id]);
+      //console.log(countriesList[country.options.id]);
+      countryFocus(countryName);
       $('#selected-country').text(capitalizeCountryName(countriesList[country.options.id]));
       $('#infoModal').modal('show');
     });
@@ -259,8 +268,17 @@ const drawCountryOutline = (countryNum) => {
       for (let i = 0; i < countrycords.length; i++) {
         let country = L.polygon(swapLongLat(countrycords[i][0]), { color: outlineColour, id: countryNum });
         countryOutlines.addLayer(country);
+        country
+          .bindTooltip(countryName, {
+            permanent: false,
+            direction: 'right',
+            className: 'country-tooltip'
+          })
+          .addTo(mapsource.map);
         country.on('click', function () {
-          console.log(countriesList[country.options.id]);
+          //console.log(countriesList[country.options.id]);
+          countryFocus(countryName);
+
           $('#selected-country').text(capitalizeCountryName(countriesList[country.options.id]));
           $('#infoModal').modal('show');
         });

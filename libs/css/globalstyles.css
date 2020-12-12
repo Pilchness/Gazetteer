@@ -26,16 +26,24 @@ h3 {
 }
 
 .leaflet-pop .leaflet-popup-content-wrapper a {
-  color: rgba(255, 255, 255, 0.5);
+  color: black;
 }
 .leaflet-pop .leaflet-popup-tip-container {
   width: 30px;
   height: 15px;
+  border: 0px;
 }
 .leaflet-pop .leaflet-popup-tip {
-  border-left: 15px solid transparent;
-  border-right: 15px solid transparent;
-  border-top: 15px solid #2c3e50;
+  width: 0px;
+  height: 0px;
+  border: 0px;
+}
+
+.leaflet-tooltip-top:before,
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+  border: none !important;
 }
 
 .marker-tooltip {
@@ -43,6 +51,17 @@ h3 {
   border: 2px solid black;
   width: 20em;
   white-space: normal;
+  font-family: 'Andika New Basic', sans-serif !important;
+  font-size: 1em;
+}
+
+.country-tooltip {
+  background: rgba(63, 191, 74, 0.7);
+  border: 2px solid black;
+  width: 10em;
+  white-space: normal;
+  font-family: 'Andika New Basic', sans-serif !important;
+  font-size: 1.3em;
 }
 
 .leaflet-tooltip-left.marker-tooltip::before {
