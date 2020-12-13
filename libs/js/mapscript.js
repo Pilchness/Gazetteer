@@ -23,8 +23,7 @@ $.ajax({
 });
 
 const addPhotoSourceInformation = (data) => {
-  let photographer = `<figure id="figure-photographer-overlay" style="display: none; background-color: rgba(63, 127, 191, 0.8);
-      margin-top: 39px; margin-left:20px; width:354px; height: 231px; color: white; position: absolute; top: 0; left: 0;">
+  let photographer = `<div id="figure-photographer-overlay" style="width: 300px; display: none; background-color: rgba(63, 127, 191, 0.7); color: white">
              <ul>
                <li>Photographer: ${data.user.name}</li>
                <li>Portfolio: ${data.user.portfolio_url}</li>
@@ -37,14 +36,19 @@ const addPhotoSourceInformation = (data) => {
            </figure>`;
 
   $('#menu-photographer').on('click', function () {
-    $('#info-figure').html(photographer);
+    $('#info-overlay').html(photographer);
     $('#country-image-title').css({ color: 'transparent', transition: 'color 2s' });
-    $('#figure-photographer-overlay').fadeIn(3000, function () {});
+    $('#figure-photographer-overlay').fadeIn(3000, function () {
+      $('#info-menu-background').on('click', function () {
+        $('#figure-photographer-overlay').fadeOut(3000, function () {});
+      });
+    });
   });
 };
 
 const getCountryImage = (country) => {
   console.log('getting photo');
+  $('#selected-country').text('hello');
 
   $.ajax({
     url: 'libs/php/getCountryImage.php',
@@ -65,6 +69,7 @@ const getCountryImage = (country) => {
           $('#country-image').attr('src', src);
           $('#country-image').attr('alt', alt);
           $('#country-image-title').text(alt);
+          $('#currentloc').text(capitalizeCountryName(country));
 
           addPhotoSourceInformation(result.data[0]);
         } else {
@@ -85,6 +90,7 @@ mapsource.stadia(); //default map style
 let countryOutlines = L.featureGroup();
 
 const getCurrentNavCords = () => {
+  console.log('getting current location');
   if ('geolocation' in navigator) {
     navigator.geolocation.getCurrentPosition(function (position) {
       $.ajax({
@@ -93,13 +99,16 @@ const getCurrentNavCords = () => {
         dataType: 'json',
         data: { latitude: position.coords.latitude, longitude: position.coords.longitude },
         success: function (response) {
-          L.marker([position.coords.latitude, position.coords.longitude])
-            .bindTooltip(response.data.results[0].formatted, {
-              permanent: false,
-              direction: 'right',
-              className: 'marker-tooltip'
-            })
-            .addTo(mapsource.map);
+          console.log($('#current-button').val());
+          if ($('#current-button').val() === 'on') {
+            L.marker([position.coords.latitude, position.coords.longitude])
+              .bindTooltip(response.data.results[0].formatted, {
+                permanent: false,
+                direction: 'right',
+                className: 'marker-tooltip'
+              })
+              .addTo(mapsource.map);
+          }
         },
 
         error: function (errorThrown) {
@@ -130,6 +139,9 @@ const countryFocus = (country) => {
   getCountryImage(country.split(' ').join('_'));
   getCountryISOCode(country);
   outlineColour = 'green';
+  console.log(country);
+  console.log($('#info-modal-label').text());
+  $('currentloc').text('HELLO');
 
   // const weather = new Promise(function (resolve, reject) {
   //   resolve(getLocalCityWeather(country));
@@ -260,7 +272,7 @@ const drawCountryOutline = (countryNum, countryName) => {
     country.on('click', function () {
       //console.log(countriesList[country.options.id]);
       countryFocus(countryName);
-      $('#selected-country').text(capitalizeCountryName(countriesList[country.options.id]));
+      //$('#currentloc').text(capitalizeCountryName(countriesList[country.options.id]));
       $('#infoModal').modal('show');
     });
   } else {
@@ -278,8 +290,8 @@ const drawCountryOutline = (countryNum, countryName) => {
         country.on('click', function () {
           //console.log(countriesList[country.options.id]);
           countryFocus(countryName);
-
-          $('#selected-country').text(capitalizeCountryName(countriesList[country.options.id]));
+          //$('#currentloc').text('Title');
+          // $('#currentloc').text(capitalizeCountryName(countriesList[country.options.id]));
           $('#infoModal').modal('show');
         });
       }

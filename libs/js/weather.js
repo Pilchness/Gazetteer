@@ -1,6 +1,6 @@
 import * as mapsource from './mapsources.js';
 
-export const handleWeatherData = (country) => {
+export const handleWeatherData = country => {
   let countryObjects;
 
   $.ajax({
@@ -17,7 +17,7 @@ export const handleWeatherData = (country) => {
     }
   });
 
-  const getCities = (countryCode) => {
+  const getCities = countryCode => {
     console.log(countryCode);
     $.ajax({
       type: 'POST',
@@ -27,7 +27,7 @@ export const handleWeatherData = (country) => {
       success: function (response) {
         let weatherCities = response.cityWeatherData;
         let matchingCities = [];
-        weatherCities.forEach((cityDataObject) => {
+        weatherCities.forEach(cityDataObject => {
           if (cityDataObject.country === countryCode) {
             matchingCities.push(cityDataObject.id);
           }
@@ -40,9 +40,9 @@ export const handleWeatherData = (country) => {
     });
   };
 
-  const getCountryCode = (country) => {
+  const getCountryCode = country => {
     let countryCode = '';
-    countryObjects.forEach((countryDataObject) => {
+    countryObjects.forEach(countryDataObject => {
       if (countryDataObject.properties.name.toLowerCase() === country.toLowerCase()) {
         countryCode = countryDataObject.properties.iso_a2;
       }
@@ -50,7 +50,7 @@ export const handleWeatherData = (country) => {
     return countryCode;
   };
 
-  const getWeatherData = (cityArray) => {
+  const getWeatherData = cityArray => {
     console.log('getting weather');
     const generateCityCodeString = () => {
       let cityCodeString = cityArray[0];
@@ -76,16 +76,19 @@ export const handleWeatherData = (country) => {
           let cityWeatherTable = '';
 
           $('#weather').on('click', function () {
-            cityData.map((data) => {
+            console.log('getting city data');
+            cityData.map(data => {
               cityWeatherTable += `<tr><td>${data.name}</td><td>${data.weather[0].description}</td><td>${
                 data.wind.speed
               }</td><td>${Math.round(data.main.temp - 273.15)}</td></tr>`; //need to convert temp from K to C
-              L.marker([data.coord.lat, data.coord.lon])
-                .bindTooltip(data.name, {
-                  permanent: false,
-                  direction: 'auto'
-                })
-                .addTo(mapsource.map);
+              if ($('#cities-button').val() === 'on') {
+                L.marker([data.coord.lat, data.coord.lon])
+                  .bindTooltip(data.name, {
+                    permanent: false,
+                    direction: 'auto'
+                  })
+                  .addTo(mapsource.map);
+              }
             });
           });
 

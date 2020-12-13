@@ -11,14 +11,23 @@ $(document).ready(function () {
     $('#mapModal').modal('show');
   });
 
-  $('#location').click(function () {
-    console.log('location');
-    $('#locationModal').modal('show');
+  $('#options').click(function () {
+    console.log('options');
+    $('#optionsModal').modal('toggle');
   });
+
+  $('#optionsModal').on('hidden.bs.modal', function () {
+    //$('#modal-fader').removeClass('enterSlowlyLeft').addClass('leaveSlowlyLeft');
+    $('#countrySearch').val('').focus();
+  });
+
+  // $('#optionsModal').on('hidden.bs.modal', function (e) {
+  //   $('#modal-fader').removeClass('leaveSlowlyLeft').addClass('enterSlowlyLeft');
+  // });
 
   $('#info').click(function () {
     console.log('info');
-    $('#infoModal').modal('show');
+    $('#infoModal').modal('toggle');
   });
 
   $('#quiz').click(function () {

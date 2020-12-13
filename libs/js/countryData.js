@@ -76,8 +76,7 @@ export const displayCountryData = (countryData) => {
           //         </ul>
           //       </div>`);
 
-          let facts = `<figure id="figure-facts-overlay" style="display: none; background-color: rgba(63, 127, 191, 0.7);
-      margin-top: 39px; margin-left:20px; width:354px; height: 231px; color: white; position: absolute; top: 0; left: 0;">
+          let facts = `<div id="figure-facts-overlay" style="width: 300px; display: none; background-color: rgba(63, 127, 191, 0.7); color: white">
              <ul>
                <li>Population: ${population}</li>
                <li>Area: ${area} km²</li>
@@ -85,7 +84,7 @@ export const displayCountryData = (countryData) => {
                <li>Sub Region: ${subregion}</li>
                <li>Gini Rating: ${giniRating}</li>
              </ul>
-           </figure>`;
+           </div>`;
 
           let bordersInfo = `<figure id="figure-border-overlay" style="display: none; background-color: rgba(63, 127, 191, 0.7);
       margin-top: 39px; margin-left:20px; padding: 5px; width:354px; height: 231px; color: white; position: absolute; top: 0; left: 0;">
